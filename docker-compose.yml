@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  php-fpm:
+    container_name: php-fpm
+    build:
+      dockerfile: ./docker/php-fpm/php82/Dockerfile
+    volumes:
+      - .:/var/www/
+      - ./docker/php-fpm/php82/ini:/usr/local/etc/php
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/var/www:rw
+    depends_on:
+      - php-fpm
+    ports:
+      - "88:80"
+    restart: always
+
+  postgres:
+    container_name: postgres
+    build:
+      context: ./docker/postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: symfony
+      POSTGRES_USER: symfony
+      POSTGRES_PASSWORD: symfony
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - db_data:/var/lib/postgresql/data:rw
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+
+volumes:
+  db_data:
