@@ -2,21 +2,21 @@
 
 namespace App\Tests\MessageHandler;
 
-use App\Entity\User;
-use App\Message\UserMessage;
-use App\Message\Handler\UserMessageHandler;
-use App\Repository\UserRepository;
+use App\Entity\Hit;
+use App\Message\HitMessage;
+use App\Message\Handler\HitMessageHandler;
+use App\Repository\HitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
-class UserMessageHandlerTest extends TestCase
+class HitMessageHandlerTest extends TestCase
 {
     public function testUserMessageHandler(): void
     {
-        $message = new UserMessage('127.0.0.1', 'Test User Agent', 'test_identifier');
+        $message = new HitMessage('127.0.0.1', 'Test User Agent', 'test_identifier');
 
-        $userRepository = $this->createMock(UserRepository::class);
-        $userRepository->expects($this->once())
+        $hitRepository = $this->createMock(HitRepository::class);
+        $hitRepository->expects($this->once())
             ->method('hasSameIdentifier')
             ->with('test_identifier')
             ->willReturn(null);
@@ -27,21 +27,21 @@ class UserMessageHandlerTest extends TestCase
         $entityManager->expects($this->once())
             ->method('flush');
 
-        $handler = new UserMessageHandler($userRepository, $entityManager);
+        $handler = new HitMessageHandler($hitRepository, $entityManager);
         $handler($message);
     }
 
     public function testUserMessageHandlerUpdate(): void
     {
-        $existingUser = new User();
+        $existingUser = new Hit();
         $existingUser->setIp('127.0.0.1');
         $existingUser->setUseragent('Old User Agent');
         $existingUser->setIdentifier('test_identifier');
 
-        $message = new UserMessage('127.0.0.1', 'New User Agent', 'test_identifier');
+        $message = new HitMessage('127.0.0.1', 'New User Agent', 'test_identifier');
 
-        $userRepository = $this->createMock(UserRepository::class);
-        $userRepository->expects($this->once())
+        $hitRepository = $this->createMock(HitRepository::class);
+        $hitRepository->expects($this->once())
             ->method('hasSameIdentifier')
             ->with('test_identifier')
             ->willReturn($existingUser);
@@ -50,7 +50,7 @@ class UserMessageHandlerTest extends TestCase
         $entityManager->expects($this->once())
             ->method('flush');
 
-        $handler = new UserMessageHandler($userRepository, $entityManager);
+        $handler = new HitMessageHandler($hitRepository, $entityManager);
         $handler($message);
     }
 }

@@ -43,9 +43,9 @@ API for the hit collect
 ## The Fast Track
 1 Copy and run in the terminal
 ```
-git clone https://github.com/BlackSou/user-crud-symfony.git app
+git clone https://github.com/BlackSou/banners.git app
 ```
-2 Run Docker containers(wait few minutes) and open the Docker PHP container
+2 Running Docker containers(wait few minutes) and open the Docker PHP container
 ```
 docker-compose up --build -d && docker exec -ti php-fpm sh
 ```
@@ -53,11 +53,11 @@ docker-compose up --build -d && docker exec -ti php-fpm sh
 ```
 composer install
 ```
-4 Run migrations
+4 Running migrations
 ```
 php bin/console doctrine:migrations:migrate
 ```
-5 Run messenger
+5 Running the worker
 ```
 php bin/console messenger:consume async
 ```

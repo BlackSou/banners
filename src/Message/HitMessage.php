@@ -2,7 +2,7 @@
 
 namespace App\Message;
 
-class UserMessage
+class HitMessage
 {
     private $ip;
     private $useragent;

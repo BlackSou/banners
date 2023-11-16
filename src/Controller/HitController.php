@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Message\UserMessage;
+use App\Message\HitMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ class HitController extends AbstractController
         $identifier = md5($ip . "_" . $useragent);
 
         try {
-        $this->messageBus->dispatch(new UserMessage($ip, $useragent, $identifier));
+            $this->messageBus->dispatch(new HitMessage($ip, $useragent, $identifier));
         } catch (\Exception $e) {
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
